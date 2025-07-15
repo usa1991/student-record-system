@@ -23,3 +23,4 @@ A Python-based Student Record Management System using **Tkinter** and **SQLite**
 ```bash
 screenshots/
 └── retro-ui.png
+![Student Record System Screenshot](screenshots/retro-ui.png)
