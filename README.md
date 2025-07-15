@@ -1,6 +1,6 @@
 # 🎓 Student Record System (Retro GUI Version)
 
-A Python-based Student Record Management System using **Tkinter** and **SQLite** with a cool retro terminal interface.
+A Python-based Student Record Management System using **Tkinter** and **SQLite**, featuring a classic green-on-black retro terminal aesthetic.
 
 ---
 
@@ -10,17 +10,23 @@ A Python-based Student Record Management System using **Tkinter** and **SQLite**
 - 🔍 Search by name or roll number
 - ✏️ Edit student details and marks
 - 🗑️ Delete students
-- ➕ Add multiple subjects dynamically
+- ➕ Dynamically add multiple subjects
 - 📁 Persistent storage using SQLite
-- 🎨 Retro green-on-black terminal theme
+- 🖥️ GUI built with Tkinter
+- 🎨 Retro terminal-inspired green-on-black theme
+- 🪄 No need to install Python (Windows `.exe` included)
 
 ---
 
 ## 📸 Screenshot
 
-> Place your screenshot in a folder called `screenshots/` and name it `retro-ui.png`.
-
-```bash
-screenshots/
-└── retro-ui.png
 ![Student Record System Screenshot](screenshots/retro-ui.png)
+
+---
+
+## 🧑‍💻 How to Use (If running from source)
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/usa1991/student-record-system.git
+   cd student-record-system
