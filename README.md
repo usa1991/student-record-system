@@ -1,3 +1,7 @@
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+![Python](https://img.shields.io/badge/Python-3.x-blue.svg)
+
+
 # Student Record System 📚
 
 A simple terminal-based student record manager using Python and SQLite.
