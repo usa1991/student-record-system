@@ -1,23 +1,25 @@
-![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
-![Python](https://img.shields.io/badge/Python-3.x-blue.svg)
+# 🎓 Student Record System (Retro GUI Version)
 
+A Python-based Student Record Management System using **Tkinter** and **SQLite** with a cool retro terminal interface.
 
-# Student Record System 📚
+---
 
-A simple terminal-based student record manager using Python and SQLite.
+## ✨ Features
 
-## ✅ Features
-- Add students with dynamic subject-wise marks
-- Edit student name, roll number, or marks
-- Add or remove subjects later
-- Search by name or roll number
-- Delete student with full cleanup (cascade delete)
-- Colored terminal output with `colorama`
+- ➕ Add students with name, roll number, and subject-wise marks
+- 🔍 Search by name or roll number
+- ✏️ Edit student details and marks
+- 🗑️ Delete students
+- ➕ Add multiple subjects dynamically
+- 📁 Persistent storage using SQLite
+- 🎨 Retro green-on-black terminal theme
 
-## 💻 Requirements
-- Python 3.x
-- `colorama` (install with `pip install colorama`)
+---
 
-## ▶️ How to Run
+## 📸 Screenshot
+
+> Place your screenshot in a folder called `screenshots/` and name it `retro-ui.png`.
+
 ```bash
-python student_db.py
+screenshots/
+└── retro-ui.png
