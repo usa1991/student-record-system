@@ -23,7 +23,7 @@ A Python-based Student Record Management System using Tkinter and SQLite, now wi
 
 ## 📸 Screenshot
 
-> ![Student Record System Screenshot](screenshots/screenshot.png)
+> ![Student Record System Screenshot](screenshots/retro-ui.png.png)
 
 ---
 
