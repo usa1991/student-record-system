@@ -15,7 +15,7 @@ A Python-based Student Record Management System using Tkinter and SQLite, now wi
 - 📁 Persistent storage using **SQLite**
 - 🖥️ GUI built using **Tkinter**
 - 🎨 Inspired by **retro terminal-style** (green-on-black)
-- 🪄 No need to install Python (Windows `.exe` included – see `releases/`)
+- 🪄 No need to install python (Windows `.exe` included – see `releases/`)
 - ✅ Smart fallback to OCR using **Tesseract** if PDF text can't be extracted
 - ⚙️ Clean modular structure (`student_gui.py`, `pdf_reader.py`, `student_db.py`)
 
@@ -23,7 +23,7 @@ A Python-based Student Record Management System using Tkinter and SQLite, now wi
 
 ## 📸 Screenshot
 
-![Student Record System Screenshot](D:\Games\SOme shit i am making\screenshots)
+![Student Record System Screenshot](screenshots/retro-ui.png)
 
 ---
 
