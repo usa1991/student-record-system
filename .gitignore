@@ -1,5 +1,6 @@
 dist/
 releases/
+screenshots/
+ocr_output.txt
+lol.py
 __pycache__/
-*.pyc
-*.db
