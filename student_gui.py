@@ -1,10 +1,11 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 import sqlite3
-import platform
 import os
+import fitz  # PyMuPDF for PDF scanning
+from pdf_reader import scan_pdf_and_insert_data
 
-# Setup SQLite database
+# === Setup SQLite database ===
 conn = sqlite3.connect('students.db')
 cursor = conn.cursor()
 cursor.execute("PRAGMA foreign_keys = ON")
@@ -27,7 +28,7 @@ CREATE TABLE IF NOT EXISTS marks (
 """)
 conn.commit()
 
-# GUI Setup
+# === GUI Setup ===
 root = tk.Tk()
 root.title("Student Record System")
 root.geometry("1000x720")
@@ -36,17 +37,14 @@ root.eval('tk::PlaceWindow . center')
 
 style = ttk.Style()
 style.theme_use("clam")
-
-# Retro Theme Only
 style.configure("TLabel", background="black", foreground="#00FF00")
 style.configure("TEntry", fieldbackground="black", foreground="#00FF00")
 style.configure("TButton", background="black", foreground="#00FF00")
 style.configure("Treeview", background="black", foreground="#00FF00", fieldbackground="black")
 style.configure("Treeview.Heading", background="black", foreground="#00FF00")
-
 root.configure(bg="black")
 
-# Form
+# === Form ===
 form_frame = tk.Frame(root, bg="black")
 form_frame.pack(pady=5)
 
@@ -72,7 +70,7 @@ def add_subject_row():
 
 add_subject_row()
 
-# Save logic
+# === Database Logic ===
 selected_student_id = None
 
 def clear_form():
@@ -111,7 +109,8 @@ def save_student():
 
 def update_student():
     global selected_student_id
-    if not selected_student_id: return
+    if not selected_student_id:
+        return
     name = entry_name.get().strip()
     roll = entry_roll.get().strip()
     if not name or not roll:
@@ -130,20 +129,56 @@ def update_student():
     clear_form()
     load_students()
 
-# Buttons
+# === PDF Import ===
+def scan_pdf_and_insert():
+    pdf_path = filedialog.askopenfilename(filetypes=[("PDF Files", "*.pdf")])
+    if not pdf_path:
+        return
+
+    try:
+        name, roll, marks_data = scan_pdf_and_insert_data(pdf_path)
+
+        # Populate the form with extracted data
+        entry_name.delete(0, tk.END)
+        entry_name.insert(0, name)
+        entry_roll.delete(0, tk.END)
+        entry_roll.insert(0, roll)
+
+        # Clear existing subject fields
+        for s, m in subject_entries:
+            s.destroy()
+            m.destroy()
+        subject_entries.clear()
+
+        # Add extracted subjects
+        for subject, mark in marks_data:
+            s = ttk.Entry(subject_frame, width=20)
+            m = ttk.Entry(subject_frame, width=10)
+            s.insert(0, subject)
+            m.insert(0, str(mark))
+            s.grid()
+            m.grid()
+            subject_entries.append((s, m))
+
+        save_btn.config(text="✅ Save Student", command=save_student)
+        messagebox.showinfo("Success", "PDF scanned and data populated!")
+
+    except Exception as e:
+        messagebox.showerror("Scan Failed", str(e))
+
+# === Buttons ===
 button_frame = tk.Frame(root, bg="black")
 button_frame.pack(pady=5)
 ttk.Button(button_frame, text="➕ Add Subject", command=add_subject_row).grid(row=0, column=0, padx=10)
 save_btn = ttk.Button(button_frame, text="✅ Save Student", command=save_student)
 save_btn.grid(row=0, column=1, padx=10)
+ttk.Button(button_frame, text="📄 Scan PDF", command=scan_pdf_and_insert).grid(row=0, column=2, padx=10)
 
-# Search section
+# === Search ===
 search_frame = tk.Frame(root, bg="black")
 search_frame.pack(pady=5)
-
 search_type = tk.StringVar(value="name")
 ttk.Combobox(search_frame, textvariable=search_type, values=["name", "roll"], width=10, state="readonly").grid(row=0, column=0, padx=5)
-
 search_var = tk.StringVar()
 search_entry = ttk.Entry(search_frame, textvariable=search_var, width=30)
 search_entry.grid(row=0, column=1, padx=5)
@@ -164,7 +199,7 @@ def search_student():
 
 ttk.Button(search_frame, text="🔍 Search", command=search_student).grid(row=0, column=2, padx=5)
 
-# Treeview
+# === Table ===
 table_frame = tk.Frame(root, bg="black")
 table_frame.pack()
 columns = ("Name", "Roll", "Subjects")
@@ -185,11 +220,12 @@ def load_students():
         marks = ", ".join(f"{s}: {m}" for s, m in cursor.fetchall())
         tree.insert("", "end", iid=sid, values=(name, roll, marks))
 
-# Edit/Delete
+# === Edit/Delete ===
 def edit_selected():
     global selected_student_id
     selected = tree.focus()
-    if not selected: return
+    if not selected:
+        return
     selected_student_id = int(selected)
     cursor.execute("SELECT name, roll_number FROM students WHERE id=?", (selected_student_id,))
     name, roll = cursor.fetchone()
@@ -214,7 +250,8 @@ def edit_selected():
 
 def delete_selected():
     selected = tree.focus()
-    if not selected: return
+    if not selected:
+        return
     cursor.execute("DELETE FROM students WHERE id=?", (selected,))
     conn.commit()
     clear_form()
@@ -225,10 +262,9 @@ action_frame.pack(pady=10)
 ttk.Button(action_frame, text="✏️ Edit Student", command=edit_selected).grid(row=0, column=0, padx=20)
 ttk.Button(action_frame, text="🗑️ Delete Student", command=delete_selected).grid(row=0, column=1, padx=20)
 
-# Footer with ASCII + Instructions
+# === Footer ===
 footer_frame = tk.Frame(root, bg="black")
 footer_frame.pack(fill="both", expand=True, padx=10)
-
 ascii_text = """
  ____  _             _              _             _             
 |  _ \\| |_   _  __ _(_)_ __ ___    | |_ ___   ___| | _____ _ __ 
@@ -238,10 +274,8 @@ ascii_text = """
                |___/                                                          
 Created with ❤️ by Usman 
 """
-
 scrollbar_footer = tk.Scrollbar(footer_frame)
 scrollbar_footer.pack(side="right", fill="y")
-
 text = tk.Text(footer_frame, wrap="word", yscrollcommand=scrollbar_footer.set,
                height=6, font=("Courier New", 9), bg="black", fg="#00FF00", bd=0)
 text.insert(tk.END, ascii_text)
@@ -249,5 +283,6 @@ text.config(state="disabled")
 text.pack(fill="both", expand=True)
 scrollbar_footer.config(command=text.yview)
 
+# === Run ===
 load_students()
 root.mainloop()
